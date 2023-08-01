@@ -1,6 +1,19 @@
 <script setup lang="ts">
+import {ref} from 'vue'
 import HelloWorld from './components/HelloWorld.vue'
-import button from '../packages/button'
+import DButton from "../packages/components/DButton/DButton.vue";
+import FormRender from "../packages/components/form-render/index.vue";
+// import button from '../packages/button'
+
+const formData = ref({})
+const formJson = [
+  {
+    label: '订单编号',
+    field: 'applyNo',
+    type: 'input',
+    itemMarginRight: '40',
+  },
+]
 </script>
 
 <template>
@@ -13,7 +26,9 @@ import button from '../packages/button'
     </a>
   </div>
   <HelloWorld msg="Vite + Vue" />
-  <button></button>
+  <DButton></DButton>
+  <a-button>kk</a-button>
+  <FormRender :form-json="formJson" :formData="formData"></FormRender>
 </template>
 
 <style scoped>

@@ -1,4 +1,5 @@
-import DButton from './button'
+import DButton from './components/DButton'
+import type { App } from 'vue'
 
 const components = [
     DButton
