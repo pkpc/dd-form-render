@@ -28,12 +28,11 @@
 </template>
 <script setup lang="ts" name="FormRender">
 import { computed, PropType, ref, provide, toRefs, isReactive, onUpdated } from 'vue'
-import { FormOptionType, ThemeType, FormType, ThemeMap } from './types.ts'
+import { FormOptionType, ThemeType, FormType, ThemeMap } from './types'
 import { ValidateErrorEntity } from 'ant-design-vue/es/form/interface'
 import FormItemTree from './FormItemTree.vue'
 import { Form } from 'ant-design-vue'
-import SelectData from '../select-data-dialog/index.vue'
-// import { scrollToField } from '@/utils/utils'
+import scrollIntoView from 'scroll-into-view-if-needed'
 const useForm = Form.useForm
 
 const emits = defineEmits(['on-enter'])
@@ -121,26 +120,42 @@ const onSubmit = () => {
       console.log('onSubmit:', error)
       const name = error.errorFields[0].name
       const field = Array.isArray(name) ? name.join('_') : name
-      // scrollToField(field)
+      scrollToField(field)
       return { error }
     })
 }
 
-const { resetFields, clearValidate } = useForm(props.formData)
+const { resetFields } = useForm(props.formData)
 
+function clearValidate() {
+  formRef.value.clearValidate()
+}
 function clearValidateByFiled(fields: any) {
   formRef.value.clearValidate(fields)
 }
 function resetFormFields() {
   formRef.value.resetFields()
 }
+/**
+ * 表单校验失败时，滚动至第一个校验错误位置
+ */
+function scrollToField(fieldName: string) {
+  const ID = `form_item_${fieldName}`
+  const node = document.getElementById(ID) as Element
+  try {
+    scrollIntoView(node, {
+      behavior: 'smooth',
+      scrollMode: 'if-needed',
+    })
+  } catch (e) {}
+}
 
 defineExpose({
   onSubmit,
   resetFields,
   resetFormFields,
-  clearValidate,
   validateByFields,
+  clearValidate,
   clearValidateByFiled,
 })
 </script>

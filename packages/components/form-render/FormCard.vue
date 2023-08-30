@@ -1,6 +1,7 @@
 <template>
-  <div v-if="isShowCard" class="form-card" :class="[JSONData.cardClass]">
+  <div v-if="isShowCard" class="form-card" :class="[JSONData.label ? 'card-padding' : '', JSONData.cardClass]">
     <form-title
+      v-if="JSONData.label"
       class="mb-16px form-card-title"
       :class="{ expand: JSONData.expand !== false }"
       :title="getCardTitle"
@@ -56,14 +57,15 @@ const isShowCard = computed(() => JSONData.value.hidden !== true)
 </script>
 <style lang="less" scoped>
 .form-card {
-  padding: 10px 20px;
-  // margin-bottom: 12px;
   border-radius: 8px;
   background-color: #fff;
   width: 100%;
   display: flex;
   flex-flow: row wrap;
-  & + .form-card {
+  &.card-padding {
+    padding: 10px 20px;
+  }
+  & + .form-card.card-padding {
     margin-top: 12px;
   }
   &.border {
@@ -102,6 +104,7 @@ const isShowCard = computed(() => JSONData.value.hidden !== true)
   .form-card-area {
     display: flex;
     flex-flow: row wrap;
+    width: 100%;
   }
 }
 </style>

@@ -22,9 +22,10 @@
     <a-input
       v-if="dataSource.type === FormType.input"
       v-model:value="newFormData[dataSource.field]"
-      :placeholder="(dataSource?.attrs?.placeholder) ? dataSource.attrs.placeholder : `请输入${dataSource.label}`"
+      :placeholder="getPlaceholder"
       :disabled="isDisabled"
-      :suffix="dataSource.attrs?.suffix"
+      v-bind="dataSource.attrs"
+      v-on="dataSource.listeners ?? {}"
       :maxlength="getMaxLength"
       @keyup.enter="handleEnter"
       @blur="handleInputBlur"></a-input>
@@ -32,7 +33,9 @@
     <template v-else-if="dataSource.type === FormType.number">
       <a-input
         v-model:value="newFormData[dataSource.field]"
-        :placeholder="`请输入${dataSource.label}`"
+        v-bind="dataSource.attrs"
+        v-on="dataSource.listeners ?? {}"
+        :placeholder="getPlaceholder"
         :disabled="isDisabled"
         :maxlength="getMaxLength"
         @change="dataSource?.handleOnChange"
@@ -42,7 +45,9 @@
     <template v-else-if="dataSource.type === FormType.amount">
       <a-input
         v-model:value="newFormData[dataSource.field]"
-        :placeholder="`请输入${dataSource.label}`"
+        v-bind="dataSource.attrs"
+        v-on="dataSource.listeners ?? {}"
+        :placeholder="getPlaceholder"
         :disabled="isDisabled"
         @change="dataSource?.handleOnChange"
         @keyup="limitInputAmount(newFormData, dataSource.field, dataSource.attrs?.canNegative)"
@@ -69,7 +74,9 @@
     <span v-if="dataSource.type === FormType.dialogSelect" class="select-dialog-area flex">
       <a-input
         v-model:value="newFormData[dataSource.field]"
-        :placeholder="`请输入${dataSource.label}`"
+        v-bind="dataSource.attrs"
+        v-on="dataSource.listeners ?? {}"
+        :placeholder="getPlaceholder"
         :maxlength="getMaxLength"
         :disabled="isDisabled"></a-input>
       <span class="select-btn" @click="handleSelectDialogClick(dataSource)">选择</span>
@@ -89,7 +96,9 @@
       v-else-if="dataSource.type === FormType.date"
       v-model:value="newFormData[dataSource.field]"
       value-format="YYYY-MM-DD"
-      :placeholder="`请选择${dataSource.label}`"
+      v-bind="dataSource.attrs"
+      v-on="dataSource.listeners ?? {}"
+      :placeholder="getPlaceholder"
       :disabled="isDisabled"
       :disabled-date="dataSource.attrs?.disabledDate"
       @change="dataSource?.handleOnChange" />
@@ -98,20 +107,25 @@
       v-model:value="newFormData[dataSource.field]"
       allow-clear
       show-time
-      :disabled-date="dataSource.attrs?.disabledDate"
       value-format="YYYY-MM-DD HH:mm:ss"
-      :placeholder="`请选择${dataSource.label}`"
+      v-bind="dataSource.attrs"
+      v-on="dataSource.listeners ?? {}"
+      :placeholder="getPlaceholder"
       :disabled="isDisabled"
       @change="dataSource?.handleOnChange" />
     <a-month-picker
       v-else-if="dataSource.type === FormType.month"
       v-model:value="newFormData[dataSource.field]"
-      :placeholder="`请选择${dataSource.label}`"
+      v-bind="dataSource.attrs"
+      v-on="dataSource.listeners ?? {}"
+      :placeholder="getPlaceholder"
       :disabled="isDisabled"
       @change="dataSource?.handleOnChange" />
     <a-range-picker
       v-else-if="dataSource.type === FormType.timeRange"
       v-model:value="newFormData[dataSource.field]"
+      v-bind="dataSource.attrs"
+      v-on="dataSource.listeners ?? {}"
       :placeholder="['开始时间', '结束时间']"
       :disabled="isDisabled"
       @change="dataSource?.handleOnChange" />
@@ -119,49 +133,54 @@
     <a-week-picker
       v-else-if="dataSource.type === FormType.week"
       v-model:value="newFormData[dataSource.field]"
-      :placeholder="`请选择${dataSource.label}`"
+      v-bind="dataSource.attrs"
+      v-on="dataSource.listeners ?? {}"
+      :placeholder="getPlaceholder"
       :disabled="isDisabled"
       @change="dataSource?.handleOnChange" />
 
     <a-cascader
       v-else-if="dataSource.type === FormType.cascader"
       v-model:value="newFormData[dataSource.field]"
-      :allow-clear="dataSource.attrs?.allowClear"
-      :field-names="dataSource.attrs?.fieldNames"
+      v-bind="dataSource.attrs"
+      v-on="dataSource.listeners ?? {}"
       :options="dataSource.options"
       :show-search="{ filter }"
-      :placeholder="`请选择${dataSource.label}`"
+      :placeholder="getPlaceholder"
       :disabled="isDisabled"
       @change="dataSource?.handleOnChange" />
 
     <a-select
       v-else-if="dataSource.type === FormType.select"
       v-model:value="newFormData[dataSource.field]"
-      :mode="dataSource.attrs?.multiple ?? ''"
+      v-bind="dataSource.attrs"
+      v-on="dataSource.listeners ?? {}"
       :allow-clear="dataSource.attrs?.allowClear ?? true"
       :show-search="dataSource.attrs?.showSearch ?? false"
-      :placeholder="`请选择${dataSource.label}`"
+      :placeholder="getPlaceholder"
       :disabled="isDisabled"
       :auto-clear-search-value="false"
       option-filter-prop="label"
       @change="dataSource.handleOnChange"
-      @select="select">
-      <a-select-option v-if="dataSource.hasAll" value="all" :type="dataSource.field" label="全部">
+      @select="selectAll">
+      <a-select-option v-if="dataSource.attrs?.hasAll" value="all" :type="dataSource.field" label="全部">
         全部
       </a-select-option>
       <a-select-option
-        v-for="(v, index) in dataSource.options"
+        v-for="(v, index) in formatOptions"
         :key="index"
         :type="dataSource.field"
-        :label="dataSource.mapping ? v[dataSource.mapping[1]] : v.label"
-        :value="dataSource.mapping ? v[dataSource.mapping[0]] : v.value">
-        {{ dataSource.mapping ? v[dataSource.mapping[1]] : v.label }}
+        :label="v.label"
+        :value="v.value">
+        {{ v.label }}
       </a-select-option>
     </a-select>
 
     <a-radio-group
       v-else-if="dataSource.type === FormType.radio"
       v-model:value="newFormData[dataSource.field]"
+      v-bind="dataSource.attrs"
+      v-on="dataSource.listeners ?? {}"
       :disabled="isDisabled"
       :options="formatOptions"
       @change="dataSource?.handleOnChange"></a-radio-group>
@@ -169,6 +188,8 @@
     <a-checkbox-group
       v-else-if="dataSource.type === FormType.checkbox"
       v-model:check="newFormData[dataSource.field]"
+      v-bind="dataSource.attrs"
+      v-on="dataSource.listeners ?? {}"
       :options="formatOptions"
       :disabled="isDisabled"
       @change="dataSource?.handleOnChange"></a-checkbox-group>
@@ -176,16 +197,18 @@
     <a-switch
       v-else-if="dataSource.type === FormType.switch"
       v-model:checked="newFormData[dataSource.field]"
+      v-bind="dataSource.attrs"
+      v-on="dataSource.listeners ?? {}"
       :disabled="isDisabled"
       @change="dataSource?.handleOnChange"></a-switch>
 
     <a-textarea
       v-if="dataSource.type === FormType.textarea"
       v-model:value="newFormData[dataSource.field]"
+      v-bind="dataSource.attrs"
+      v-on="dataSource.listeners ?? {}"
       :auto-size="{ minRows: 4 }"
-      :maxlength="dataSource.attrs?.maxlength"
-      :show-count="dataSource.attrs?.showCount"
-      :placeholder="`请输入${dataSource.label}`"
+      :placeholder="getPlaceholder"
       :disabled="isDisabled" />
 
     <slot
@@ -283,26 +306,25 @@ const getMaxLength = computed(() => {
       return rules?.find((item: any) => item.max)?.max
     } else if (rules?.max) {
       return rules.max
+    } else if (props.dataSource?.attrs?.maxlength) {
+      return props.dataSource?.attrs?.maxlength
     }
     return undefined
   }
   return undefined
 })
 
+const getPlaceholder = computed(() => {
+  return props.dataSource.attrs?.placeholder ?? `请输入${props.dataSource.label}`
+})
+
 const getItemName = computed(() => {
   if (props.parentItem?.fieldLink === 'object') {
     return [props.parentItem.field, props.dataSource.field]
   } else if (['keyArray', 'array'].includes(props.parentItem?.fieldLink ?? '')) {
-    return [props.parentItem?.field, props.cardIndex, props.dataSource.field]
-    // if (props.parentItem?.type === FormType.cardGroup) {
-    //   return [props.parentItem.field, props.cardIndex, props.dataSource.field]
-    // } else {
-    //   if (props.dataSource.isChildItem) {
-    //     return [props.parentItem.field, props.childIndex + 1, props.dataSource.field]
-    //   } else {
-    //     return [props.parentItem.field, 0, props.dataSource.field]
-    //   }
-    // }
+    return props.parentItem?.field
+        ? [props.parentItem?.field, props.cardIndex, props.dataSource.field]
+        : [props.cardIndex, props.dataSource.field]
   } else {
     return props.dataSource.field
   }
@@ -348,7 +370,8 @@ const handleSelectDialogClick = (dataSource: FormOptionType) => {
     return
   }
   if (isDisabled.value) return
-  selectDataCallback?.(dataSource)
+  // selectDataCallback?.(dataSource)
+  dataSource?.handleOnChange()
 }
 
 const getSlotName = computed(() => {
@@ -380,12 +403,17 @@ const getFormItemStyle = computed(() => {
   }
 })
 
-const select = (value: string, option: any) => {
-  if (value === 'all') {
-    newFormData.value[option.type] = ['all']
-  }
-  if (newFormData.value[option.type]?.includes('all')) {
-    newFormData.value[option.type] = ['all']
+const selectAll = (value: string, option: any) => {
+  const attrs = props.dataSource?.attrs
+  if (attrs?.hasAll && attrs.mode === 'multiple') {
+    if (value === 'all') {
+      newFormData.value[option.type] = ['all']
+    } else {
+      const allSelectedIndex = newFormData.value[option.type]?.findIndex((item: any) => item === 'all')
+      if (allSelectedIndex > -1) {
+        newFormData.value[option.type]?.splice(allSelectedIndex, 1)
+      }
+    }
   }
 }
 
@@ -411,11 +439,20 @@ const newFormData = computed(() => props.formData)
 }
 .reset-pre {
   // margin-top: 6px;
+  text-align: left;
   margin-bottom: 0;
   white-space: break-spaces;
   word-break: break-all;
   font-family: apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
     'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
     'Noto Color Emoji';
+}
+// 大写金额
+.chineses-amount {
+  font-size: 12px;
+  line-height: 18px;
+  color: #017FFF;
+  text-align: left;
+  margin-bottom: 0;
 }
 </style>

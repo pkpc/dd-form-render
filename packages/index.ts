@@ -1,8 +1,9 @@
-import DButton from './components/DButton'
+import FormRender from './components/form-render'
+import type {FormOptionType, FormType} from './components/form-render/types'
 import type { App } from 'vue'
 
 const components = [
-    DButton
+    FormRender
 ]
 const install = (app: App) => {
     components.map((item) => {
@@ -13,5 +14,7 @@ export default {
     install,
 }
 export {
-    DButton
+    FormRender,
+    FormOptionType,
+    FormType
 }

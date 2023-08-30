@@ -57,7 +57,7 @@
   </template>
 </template>
 <script setup lang="ts" name="FormItemTree">
-import { PropType, computed, toRef, toRefs, reactive } from 'vue'
+import { PropType, computed } from 'vue'
 import { FormOptionType, ThemeType, FormType } from './types.ts'
 import FormItem from './FormItem.vue'
 import FormCard from './FormCard.vue'
@@ -79,15 +79,11 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
-  // isParent: {
-  //   type: Boolean,
-  //   default: true,
-  // },
 })
 
 const getCardFormData = (parent: FormOptionType, child: FormOptionType, cardIndex: number) => {
   if (parent?.type === FormType.cardGroup) {
-    return newFormData.value[parent.field][cardIndex]
+    return parent.field ? newFormData.value[parent.field][cardIndex] : newFormData.value[cardIndex]
   } else if (child.fieldLink === 'object') {
     return newFormData.value[child.field]
   } else if (child.fieldLink === 'array') {
@@ -102,7 +98,6 @@ const getCardFormData = (parent: FormOptionType, child: FormOptionType, cardInde
     return newFormData.value
   }
 }
-// const newFormData = toRefs(reactive(props.formData))
 const newFormData = computed(() => props.formData)
 </script>
 <style lang="less" scoped></style>
