@@ -446,6 +446,9 @@ const newFormData = computed(() => props.formData)
   font-family: apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
     'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
     'Noto Color Emoji';
+  &.mt-6px {
+    margin-top: 6px;
+  }
 }
 // 大写金额
 .chineses-amount {

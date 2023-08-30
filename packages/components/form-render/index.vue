@@ -6,7 +6,7 @@
       label-align="right"
       layout="horizontal"
       :label-col="getLabelColStyle"
-      class="productInfoForm flex flex-wrap"
+      class="flex flex-wrap"
       :class="['global-' + formTheme]"
       :rules="formRules">
       <form-item-tree :form-data="JSONData" :children="coFormJson">
@@ -168,7 +168,9 @@ defineExpose({
   height: 40px;
   margin-bottom: 16px;
 }
-
+.flex-wrap {
+  flex-wrap: wrap;
+}
 :deep(.ant-form-item-control-input-content) {
   display: flex;
 }
