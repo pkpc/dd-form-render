@@ -81,17 +81,6 @@
         :disabled="isDisabled"></a-input>
       <span class="select-btn" @click="handleSelectDialogClick(dataSource)">选择</span>
     </span>
-
-    <a-button
-      v-else-if="dataSource.type === FormType.button"
-      class="query-btn"
-      :type="
-        dataSource.attrs && dataSource.attrs.buttonType ? dataSource.attrs.buttonType : 'primary'
-      "
-      :disabled="isDisabled"
-      @click="dataSource.clickCallBack && dataSource.clickCallBack()">
-      {{ dataSource.buttonText }}
-    </a-button>
     <a-date-picker
       v-else-if="dataSource.type === FormType.date"
       v-model:value="newFormData[dataSource.field]"
@@ -187,7 +176,7 @@
 
     <a-checkbox-group
       v-else-if="dataSource.type === FormType.checkbox"
-      v-model:check="newFormData[dataSource.field]"
+      v-model:value="newFormData[dataSource.field]"
       v-bind="dataSource.attrs"
       v-on="dataSource.listeners ?? {}"
       :options="formatOptions"
@@ -315,7 +304,7 @@ const getMaxLength = computed(() => {
 })
 
 const getPlaceholder = computed(() => {
-  return props.dataSource.attrs?.placeholder ?? `请输入${props.dataSource.label}`
+  return props.dataSource.attrs?.placeholder ?? `${[FormType.input, FormType.amount, FormType.number, FormType.textarea].includes(props.dataSource.type as FormType) ? '请输入' : '请选择'}${props.dataSource.label}`
 })
 
 const getItemName = computed(() => {

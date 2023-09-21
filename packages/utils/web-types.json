@@ -1,0 +1,56 @@
+// packages/vlib-ui/dist/web-types.json
+{
+  "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
+  "framework": "vue",
+  "name": "dd-form-render",
+  "version": "1.0.0",
+  "contributions": {
+    "html": {
+      // 类型使用 typescript
+      "types-syntax": "typescript",
+      // 提示信息支持 markdown
+      "description-markup": "markdown",
+      // 自定义的标签
+      "tags": [
+        {
+          // 组件名称
+          "name": "vlib-back-top",
+          "source": {
+            "symbol": "VlibBackTop"
+          },
+          // 组件描述
+          "description": "返回页面顶部的操作按钮。",
+          // 组件文档地址
+          "doc-url": "https://github.com/bfehub/vlib-starter/components/Users/#backtop",
+          // 组件属性
+          "attributes": [
+            {
+              // 组件属性名称
+              "name": "visibility-height",
+              // 组件属性描述
+              "description": "滚动高度达到此参数值才出现",
+              // 组件属性文档
+              "doc-url": "https://github.com/bfehub/vlib-starter/components/Users/#backtop-props",
+              // 组件属性默认值
+              "default": "200",
+              // 组件属性类型
+              "value": {
+                "type": "number / string",
+                "kind": "expression"
+              }
+            }
+            // ...
+          ],
+          // 组件插槽
+          "slots": [
+            {
+              "name": "default",
+              "description": "自定义默认内容",
+              "doc-url": "https://github.com/bfehub/vlib-starter/components/Users/#backtop-slots"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

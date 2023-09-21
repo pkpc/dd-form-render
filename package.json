@@ -1,7 +1,7 @@
 {
   "name": "dd-form-render-v2",
   "private": false,
-  "version": "0.0.15",
+  "version": "0.0.20",
   "author": "pengkai",
   "type": "module",
   "main": "dist/dd-form-render.js",
@@ -15,12 +15,16 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lib": "vite build --config vite-lib.config.js"
+    "lib": "vite build --config vite-lib.config.js",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:serve": "vitepress serve docs"
   },
   "dependencies": {
     "@rollup/plugin-commonjs": "^25.0.3",
     "@vitejs/plugin-vue-jsx": "^3.0.1",
     "ant-design-vue": "^3.2.15",
+    "bignumber.js": "^9.1.2",
     "husky": "^8.0.3",
     "less": "^4.1.3",
     "prettier": "^3.0.0",
@@ -29,6 +33,7 @@
     "unocss": "^0.54.1",
     "unplugin-icons": "^0.16.5",
     "unplugin-vue-components": "^0.25.1",
+    "vitepress": "^1.0.0-rc.10",
     "vue": "^3.3.4"
   },
   "devDependencies": {

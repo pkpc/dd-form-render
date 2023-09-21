@@ -23,7 +23,6 @@ export enum FormType {
   select = 'select',
   textarea = 'textarea',
   dialogSelect = 'dialogSelect',
-  button = 'button',
   date = 'date',
   dateTime = 'dateTime',
   month = 'month',

@@ -207,7 +207,7 @@ defineExpose({
 }
 
 :deep(.ant-radio-wrapper + .ant-radio-wrapper) {
-  margin-left: 60px;
+  margin-left: 20px;
 }
 
 :deep(.ant-form-item-label > label.ant-form-item-required) {

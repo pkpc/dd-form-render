@@ -1,6 +1,7 @@
 /**
  * 金额相关hook
  */
+import BigNumber from 'bignumber.js'
 
 export function useFmtAmount() {
   // 限制输入的金额格式
@@ -98,24 +99,21 @@ export function useFmtAmount() {
     if (money === '-') {
       return '负'
     }
-    if (Number(money) < 0) {
-      isNegative = true
-      money = Math.abs(Number(money))
-    }
 
-    money = parseFloat(money as any)
-    if (money >= maxNum) {
+    if (BigNumber(money).comparedTo(maxNum) === 1) {
       //超出最大处理数字
       return '超出最大处理数字'
-    }
-    if (money == 0) {
+    } else if (BigNumber(money).comparedTo(0) === -1) {
+      isNegative = true
+      // money = Math.abs(Number(money))
+    } else if (BigNumber(money).comparedTo(0) === 0) {
       chineseStr = cnNums[0] + cnIntLast + cnInteger
       return chineseStr
     }
-    //四舍五入保留两位小数,转换为字符串
-    money = Math.round(money * 100).toString()
-    const integerNum = money.substr(0, money.length - 2) //金额整数部分
-    const decimalNum = money.substr(money.length - 2) //金额小数部分
+    money = amountLimitInput(money as string)
+    const [integerNum, decimalNum] = (money as string).split('.')
+    // const integerNum = money.substr(0, money.length - 2) //金额整数部分
+    // const decimalNum = money.substr(money.length - 2) //金额小数部分
     //获取整型部分转换
     if (parseInt(integerNum, 10) > 0) {
       let zeroCount = 0
@@ -142,7 +140,7 @@ export function useFmtAmount() {
       chineseStr += cnIntLast
     }
     //小数部分
-    if (decimalNum != '') {
+    if (decimalNum) {
       const decLen = decimalNum.length
       for (let i = 0; i < decLen; i++) {
         const n = decimalNum.substr(i, 1)

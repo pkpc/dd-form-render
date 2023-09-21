@@ -27,13 +27,28 @@ const formData = ref({
   applyNo: '',
   state: 1,
   test: '900000',
+  dev: [],
   readOnly: '手动阀手动阀舒服点啊顺丰快递到家了jlsajflkjljlsdf手动阀手动阀舒服点啊顺丰快递到家了jlsajflkjljlsdf手动阀手动阀舒服点啊顺丰快递到家了jlsajflkjljlsdf手动阀手动阀舒服点啊顺丰快递到家了jlsajflkjljlsdf手动阀手动阀舒服点啊顺丰快递到家了jlsajflkjljlsdf'
 })
+
 const formJson = [
+  {
+    label: 'dev',
+    field: 'dev',
+    type: FormType.checkbox,
+    options: [
+      {label: '23人声鼎沸', value: 1},
+      {label: '暗室逢灯', value: 2},
+      {label: '士大夫', value: 3},
+      // {name: '23人声鼎沸', value: 1},
+      // {name: '暗室逢灯', value: 2},
+      // {name: '士大夫', value: 3}
+    ],
+  },
   {
     label: 'amountReadOnly',
     field: 'test',
-    type: FormType.amountReadOnly,
+    type: FormType.amount,
   },
   {
     label: 'readOnly',
@@ -98,7 +113,8 @@ const formJson = [
 
 const formRenderRef = ref()
 const handleRestValid = () => {
-  formRenderRef.value.clearValidate()
+  console.log('formData:', formData.value)
+  // formRenderRef.value.clearValidate()
 }
 </script>
 
