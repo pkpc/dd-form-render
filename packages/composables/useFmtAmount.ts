@@ -29,12 +29,8 @@ export function useFmtAmount() {
   }
 
   // 金额转为中文大写
-  function upperChineseAmount(item: any, prop?: string) {
-    if (prop) {
-      return amountToChinese(amountUnFormat(item[prop]))
-    } else {
-      return item ? amountToChinese(amountUnFormat(item)) : ''
-    }
+  function upperChineseAmount(item: any, amountBaseUnit?: string) {
+    return item ? amountToChinese(amountUnFormat(item), amountBaseUnit) : ''
   }
 
   // 限制只能输入数字且为整数
@@ -80,7 +76,7 @@ export function useFmtAmount() {
   }
 
   // 金额转为中文大写
-  function amountToChinese(money: string | number) {
+  function amountToChinese(money: string | number, baseUnit?: string) {
     const cnNums = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'] //汉字的数字
     const cnIntRadice = ['', '拾', '佰', '仟'] //基本单位
     const cnIntUnits = ['', '万', '亿', '兆'] //对应整数部分扩展单位
@@ -100,6 +96,7 @@ export function useFmtAmount() {
       return '负'
     }
 
+    if (baseUnit && baseUnit.includes('万')) money = BigNumber(money).times(10000).toString()
     if (BigNumber(money).comparedTo(maxNum) === 1) {
       //超出最大处理数字
       return '超出最大处理数字'

@@ -54,7 +54,7 @@
         @focus="unFormatAmount(newFormData, dataSource.field)"
         @blur="formatAmount(newFormData, dataSource.field)"></a-input>
       <p class="chineses-amount">
-        {{ upperChineseAmount(newFormData[dataSource.field]) }}
+        {{ upperChineseAmount(newFormData[dataSource.field], dataSource.attrs?.amountBaseUnit || '元' ) }}
       </p>
     </template>
 
@@ -66,8 +66,23 @@
           getReadonlyData
         }}</pre>
         <p v-if="dataSource.type === FormType.amountReadOnly" class="chineses-amount">
-          {{ upperChineseAmount(newFormData[dataSource.field]) }}
+          {{ upperChineseAmount(newFormData[dataSource.field], dataSource.attrs?.amountBaseUnit || '元') }}
         </p>
+        <div v-if="dataSource.type === FormType.desensitize" class="desensitize-suffix">
+          <icon-custom-eye-open v-if="isOpen" @click="handleDesensitizeClick"></icon-custom-eye-open>
+          <icon-custom-eye-close v-else @click="handleDesensitizeClick"></icon-custom-eye-close>
+        </div>
+      </div>
+    </template>
+
+    <!-- 脱敏数据 -->
+    <template v-else-if="dataSource.type === FormType.desensitize">
+      <div v-if="isShowDesensitizeCell" class="w-full pl-20px">
+        <pre class="reset-pre" >{{ getDesensitizeData }}</pre>
+        <div v-if="dataSource.type === FormType.desensitize" class="desensitize-suffix">
+          <icon-custom-eye-open v-if="isOpen" @click="handleDesensitizeClick"></icon-custom-eye-open>
+          <icon-custom-eye-close v-else @click="handleDesensitizeClick"></icon-custom-eye-close>
+        </div>
       </div>
     </template>
 
@@ -280,8 +295,32 @@ const getReadonlyData = computed(() => {
   const value = newFormData.value[props.dataSource.field]
   if (props.dataSource.formattedValue) {
     return props.dataSource.formattedValue(value)
+  } else if (props.dataSource.type === FormType.desensitize) {
+    const Encode = `${props.dataSource.field}Encode`
+    const Decode = `${props.dataSource.field}Decode`
+    if (isOpen.value) {
+      return newFormData.value[Decode] || newFormData.value[Encode] || value
+    } else {
+      return newFormData.value[Encode] || value
+    }
   }
   return value
+})
+
+const isShowDesensitizeCell = computed(() => {
+  const Encode = `${props.dataSource.field}Encode`
+  return !!newFormData.value[Encode]
+})
+
+const getDesensitizeData = computed(() => {
+  const value = newFormData.value[props.dataSource.field]
+  const Encode = `${props.dataSource.field}Encode`
+  const Decode = `${props.dataSource.field}Decode`
+  if (isOpen.value) {
+    return newFormData.value[Decode] || newFormData.value[Encode] || value
+  } else {
+    return newFormData.value[Encode] || ''
+  }
 })
 
 const getMaxLength = computed(() => {
@@ -346,11 +385,17 @@ const handleEnter = () => {
   onKeyupEnter?.()
 }
 
-const handleInputBlur = (data: any) => {
+const handleInputBlur = () => {
   if (newFormData.value[props.dataSource.field])
     newFormData.value[props.dataSource.field] = newFormData.value[props.dataSource.field].trim()
 
   formatAmount(newFormData, props.dataSource.field)
+}
+
+const isOpen = ref(false)
+const handleDesensitizeClick = () => {
+  isOpen.value = !isOpen.value
+  props.dataSource?.handleOnChange?.(isOpen.value)
 }
 
 const handleSelectDialogClick = (dataSource: FormOptionType) => {
@@ -360,7 +405,7 @@ const handleSelectDialogClick = (dataSource: FormOptionType) => {
   }
   if (isDisabled.value) return
   // selectDataCallback?.(dataSource)
-  dataSource?.handleOnChange()
+  props.dataSource?.handleOnChange?.()
 }
 
 const getSlotName = computed(() => {
@@ -446,5 +491,14 @@ const newFormData = computed(() => props.formData)
   color: #017FFF;
   text-align: left;
   margin-bottom: 0;
+}
+.desensitize-suffix {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  position: absolute;
+  right: -40px;
+  top: 5px;
+  cursor: pointer;
 }
 </style>

@@ -28,7 +28,12 @@ const formData = ref({
   state: 1,
   test: '900000',
   dev: [],
-  readOnly: '手动阀手动阀舒服点啊顺丰快递到家了jlsajflkjljlsdf手动阀手动阀舒服点啊顺丰快递到家了jlsajflkjljlsdf手动阀手动阀舒服点啊顺丰快递到家了jlsajflkjljlsdf手动阀手动阀舒服点啊顺丰快递到家了jlsajflkjljlsdf手动阀手动阀舒服点啊顺丰快递到家了jlsajflkjljlsdf'
+  amount: '',
+  amount2: '',
+  readOnly: '手动阀手动动阀舒服点啊顺丰快递到动阀舒服',
+  readOnlyEncode: '139****3241',
+  readOnlyDecode: '13999863241',
+  readOnly2: '手动阀手动阀舒服点啊顺丰快递到家了jlsajflkjljlsdf手动阀手动阀舒服点啊顺丰快递到家了jlsajflkjljlsdf手动阀手动阀舒服点啊顺丰快递到家了jlsajflkjljlsdf手动阀手动阀舒服点啊顺丰快递到家了jlsajflkjljlsdf手动阀手动阀舒服点啊顺丰快递到家了jlsajflkjljlsdf'
 })
 
 const formJson = [
@@ -51,10 +56,27 @@ const formJson = [
     type: FormType.amount,
   },
   {
+    label: '金额',
+    field: 'amount',
+    type: FormType.amount,
+  },
+  {
+    label: '金额（万元）',
+    field: 'amount2',
+    type: FormType.amount,
+    attrs: {
+      amountBaseUnit: '万元',
+    }
+  },
+  {
     label: 'readOnly',
     field: 'readOnly',
-    type: FormType.readonly,
-  },  {
+    type: FormType.desensitize,
+    handleOnChange: (isOpen: boolean) => {
+      console.log('isOpen:', isOpen)
+    }
+  },
+  {
     label: 'dialogSelect',
     field: 'test2',
     type: FormType.dialogSelect,
@@ -70,6 +92,7 @@ const formJson = [
     labelTip: 'kkkasdf这是',
     title: '颗粒剂',
     attrs: {
+      isTest: true,
       maxlength: 4,
       hasAll: true,
     },

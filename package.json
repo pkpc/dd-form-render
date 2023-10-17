@@ -1,7 +1,7 @@
 {
   "name": "dd-form-render-v2",
   "private": false,
-  "version": "0.0.20",
+  "version": "0.1.1",
   "author": "pengkai",
   "type": "module",
   "main": "dist/dd-form-render.js",
