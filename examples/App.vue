@@ -25,6 +25,7 @@ import {FormType} from "../packages/components/form-render/types.ts";
 
 const formData = ref({
   applyNo: '',
+  rate: 1,
   state: 1,
   test: '900000',
   dev: [],
@@ -49,6 +50,11 @@ const formJson = [
       // {name: '暗室逢灯', value: 2},
       // {name: '士大夫', value: 3}
     ],
+  },
+  {
+    label: 'rate',
+    field: 'rate',
+    type: FormType.rate,
   },
   {
     label: 'amountReadOnly',

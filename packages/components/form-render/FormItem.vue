@@ -206,6 +206,12 @@
       :disabled="isDisabled"
       @change="dataSource?.handleOnChange"></a-switch>
 
+    <a-rate v-else-if="dataSource.type === FormType.rate"
+            v-model:value="newFormData[dataSource.field]"
+            v-bind="dataSource.attrs"
+            v-on="dataSource.listeners ?? {}"
+            @change="dataSource?.handleOnChange"/>
+
     <a-textarea
       v-if="dataSource.type === FormType.textarea"
       v-model:value="newFormData[dataSource.field]"

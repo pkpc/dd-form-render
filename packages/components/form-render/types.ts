@@ -34,6 +34,7 @@ export enum FormType {
   switch = 'switch',
   readonly = 'readonly',
   desensitize = 'desensitize',
+  rate = 'rate',
   slot = 'slot',
   amountReadOnly = 'amountReadOnly',
 }
